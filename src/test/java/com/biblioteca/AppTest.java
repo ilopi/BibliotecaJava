@@ -1,4 +1,4 @@
-package org.example;
+package com.biblioteca;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
