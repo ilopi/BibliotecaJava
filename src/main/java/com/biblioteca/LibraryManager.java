@@ -22,7 +22,23 @@ public class LibraryManager implements LibraryService {
 
     @Override
     public void buscarLibro(String texto) {
-
+        texto = texto.toLowerCase();
+        boolean encontrado = false;
+        for (Book libro : catalogo) {
+            if (
+                    libro.titulo().toLowerCase().contains(texto) ||
+                            libro.autor().toLowerCase().contains(texto) ||
+                            libro.ISBN().toLowerCase().contains(texto)
+            ) {
+                System.out.println("\nLibro encontrado: ");
+                System.out.println(libro.titulo() + " - " + libro.autor() + " - " +
+                        libro.anio() + " - " + libro.ISBN());
+                encontrado = true;
+            }
+        }
+        if (!encontrado) {
+            System.out.println("No se ha encontrado el libro con " + texto);
+        }
     }
 
     @Override
