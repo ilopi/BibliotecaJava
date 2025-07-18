@@ -2,6 +2,7 @@ package com.biblioteca;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class LibraryManager implements LibraryService {
     // Array de libros
@@ -67,17 +68,13 @@ public class LibraryManager implements LibraryService {
     public void sacarLibro(String texto) throws Exception, BookNotFoundException {
         texto = texto.toLowerCase();
         boolean encontrado = false;
+        List<Integer> indicesCoincidentes = new ArrayList<>();
         for (int i = 0; i < catalogo.size(); i++) {
             Book libro = catalogo.get(i);
             if (
                     coincide(libro, texto) && libro.disponibilidad()
             ) {
-                System.out.println("\nLibro disponible para el préstamo: ");
-                imprimirLibro(libro);
-                actualizarDisponibilidad(i, libro, false); // Prestado
-                System.out.println("\nLibro prestado con éxito.");
-                encontrado = true;
-                break;
+                indicesCoincidentes.add(i);
             } else if (
                     coincide(libro, texto) && !libro.disponibilidad()
             ) {
@@ -86,8 +83,31 @@ public class LibraryManager implements LibraryService {
                 encontrado = true;
             }
         }
-        if (!encontrado) {
-            throw new BookNotFoundException("No se ha encontrado el libro con " + texto);
+        if (indicesCoincidentes.isEmpty()) {
+            throw new BookNotFoundException("\nLibro no encontrado.");
+        } else if (indicesCoincidentes.size() == 1) {
+            int i = indicesCoincidentes.get(0);
+            Book libro = catalogo.get(i);
+            imprimirLibro(libro);
+            actualizarDisponibilidad(i, libro, false);
+            System.out.println("\nLibro prestado con éxito.");
+        } else {
+            // Mostrar todos
+            System.out.println("\nSe encontraron varios libros: ");
+            for (int j = 0; j < indicesCoincidentes.size(); j++) {
+                Book libro = catalogo.get(indicesCoincidentes.get(j));
+                System.out.println((j + 1) + ". ");
+                imprimirLibro(libro);
+            }
+
+            // Preguntar cuál
+            System.out.print("\n¿Cuál desea sacar? Introduzca el número: ");
+            Scanner scanner = new Scanner(System.in);
+            int opcion = scanner.nextInt();
+            int i = indicesCoincidentes.get(opcion - 1);
+            Book libro = catalogo.get(i);
+            actualizarDisponibilidad(i, libro, false);
+            System.out.println("\nLibro prestado con éxito.");
         }
     }
 
@@ -95,27 +115,46 @@ public class LibraryManager implements LibraryService {
     public void devolverLibro(String texto) throws Exception, BookNotFoundException {
         texto = texto.toLowerCase();
         boolean encontrado = false;
+        List<Integer> indicesCoincidentes = new ArrayList<>();
         for (int i = 0; i < catalogo.size(); i++) {
             Book libro = catalogo.get(i);
             if (
                     coincide(libro, texto) && !libro.disponibilidad()
             ) {
-                System.out.println("\nLibro que quieres devolver: ");
-                imprimirLibro(libro);
-                actualizarDisponibilidad(i, libro, true); // Disponible
-                System.out.println("\nLibro devuelto con éxito.");
-                encontrado = true;
-                break;
+                indicesCoincidentes.add(i);
             } else if (
                     coincide(libro, texto) && libro.disponibilidad()
             ) {
-                System.out.println("\nEste libro ya se encuentra en la biblioteca: ");
+                System.out.println("\nNo disponible para la devolución por encontrarse en la biblioteca: ");
                 imprimirLibro(libro);
                 encontrado = true;
             }
         }
-        if (!encontrado) {
-            throw new BookNotFoundException("No se ha encontrado el libro con " + texto);
+        if (indicesCoincidentes.isEmpty()) {
+            throw new BookNotFoundException("\nLibro no encontrado.");
+        } else if (indicesCoincidentes.size() == 1) {
+            int i = indicesCoincidentes.get(0);
+            Book libro = catalogo.get(i);
+            imprimirLibro(libro);
+            actualizarDisponibilidad(i, libro, true);
+            System.out.println("\nLibro devuelto con éxito.");
+        } else {
+            // Mostrar todos
+            System.out.println("\nSe encontraron varios libros: ");
+            for (int j = 0; j < indicesCoincidentes.size(); j++) {
+                Book libro = catalogo.get(indicesCoincidentes.get(j));
+                System.out.println((j + 1) + ". ");
+                imprimirLibro(libro);
+            }
+
+            // Preguntar cuál
+            System.out.print("\n¿Cuál desea devolver? Introduzca el número: ");
+            Scanner scanner = new Scanner(System.in);
+            int opcion = scanner.nextInt();
+            int i = indicesCoincidentes.get(opcion - 1);
+            Book libro = catalogo.get(i);
+            actualizarDisponibilidad(i, libro, false);
+            System.out.println("\nLibro devuelto con éxito.");
         }
     }
 
@@ -130,23 +169,35 @@ public class LibraryManager implements LibraryService {
 
     @Override
     public void listarDisponibles() {
+        boolean encontrado = false;
         System.out.println("\nLos libros que tenemos disponibles actualmente son los siguientes: ");
         for (Book libro : catalogo) {
             if (libro.disponibilidad()) {
                 imprimirLibro(libro);
+                encontrado = true;
             }
+        }
+        if (!encontrado) {
+            System.out.println(" No hay libros disponibles actualmente.");
         }
     }
 
     @Override
     public void listarNoDisponibles() {
+        boolean encontrado = false;
         System.out.println("\nLos libros que NO tenemos disponibles actualmente son los siguientes: ");
         for (Book libro : catalogo) {
             if (!libro.disponibilidad()) {
                 imprimirLibro(libro);
+                encontrado = true;
             }
+
+        }
+        if (!encontrado) {
+            System.out.println("Todos los libros están disponibles actualmente.");
         }
     }
+
 }
 
 
