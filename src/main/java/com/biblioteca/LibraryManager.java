@@ -21,7 +21,7 @@ public class LibraryManager implements LibraryService {
     }
 
     @Override
-    public void buscarLibro(String texto) {
+    public void buscarLibro(String texto) throws Exception, BookNotFoundException {
         texto = texto.toLowerCase();
         boolean encontrado = false;
         for (Book libro : catalogo) {
@@ -37,23 +37,90 @@ public class LibraryManager implements LibraryService {
             }
         }
         if (!encontrado) {
-            System.out.println("No se ha encontrado el libro con " + texto);
+            throw new BookNotFoundException("No se ha encontrado el libro con " + texto);
         }
     }
 
     @Override
-    public void sacarLibro(String texto) {
-
+    public void sacarLibro(String texto) throws Exception, BookNotFoundException {
+        texto = texto.toLowerCase();
+        boolean encontrado = false;
+        for (int i = 0; i < catalogo.size(); i++) {
+            Book libro = catalogo.get(i);
+            if (
+                    ( libro.titulo().toLowerCase().contains(texto) ||
+                            libro.autor().toLowerCase().contains(texto) ||
+                            libro.ISBN().toLowerCase().contains(texto) ) && libro.disponibilidad()
+            ) {
+                System.out.println("\nLibro disponible para el préstamo: ");
+                System.out.println(libro.titulo() + " - " + libro.autor() + " - " +
+                        libro.anio() + " - " + libro.ISBN());
+                Book nuevoLibro = new Book(
+                        libro.titulo(),
+                        libro.autor(),
+                        libro.anio(),
+                        libro.ISBN(),
+                        false // ← marcamos como prestado
+                );
+                catalogo.set(i, nuevoLibro);
+                System.out.println("\nLibro prestado con éxito.");
+                encontrado = true;
+                break;
+            } else if (
+                    ( libro.titulo().toLowerCase().contains(texto) ||
+                            libro.autor().toLowerCase().contains(texto) ||
+                            libro.ISBN().toLowerCase().contains(texto) ) && !libro.disponibilidad()
+            ) {
+                System.out.println("\nLibro No disponible. Ya en préstamo: ");
+                System.out.println(libro.titulo() + " - " + libro.autor() + " - " +
+                        libro.anio() + " - " + libro.ISBN());
+                encontrado = true;
+            }
+        }
+        if (!encontrado) {
+            throw new BookNotFoundException("No se ha encontrado el libro con " + texto);
+        }
     }
 
     @Override
-    public void devolverLibro(String texto) {
-
-    }
-
-    @Override
-    public void getDetailsBook() {
-
+    public void devolverLibro(String texto) throws Exception, BookNotFoundException {
+        texto = texto.toLowerCase();
+        boolean encontrado = false;
+        for (int i = 0; i < catalogo.size(); i++) {
+            Book libro = catalogo.get(i);
+            if (
+                    ( libro.titulo().toLowerCase().contains(texto) ||
+                            libro.autor().toLowerCase().contains(texto) ||
+                            libro.ISBN().toLowerCase().contains(texto) ) && !libro.disponibilidad()
+            ) {
+                System.out.println("\nLibro que quieres devolver: ");
+                System.out.println(libro.titulo() + " - " + libro.autor() + " - " +
+                        libro.anio() + " - " + libro.ISBN());
+                Book nuevoLibro = new Book(
+                        libro.titulo(),
+                        libro.autor(),
+                        libro.anio(),
+                        libro.ISBN(),
+                        true // ← marcamos como prestado
+                );
+                catalogo.set(i, nuevoLibro);
+                System.out.println("\nLibro devuelto con éxito.");
+                encontrado = true;
+                break;
+            } else if (
+                    ( libro.titulo().toLowerCase().contains(texto) ||
+                            libro.autor().toLowerCase().contains(texto) ||
+                            libro.ISBN().toLowerCase().contains(texto) ) && libro.disponibilidad()
+            ) {
+                System.out.println("\nEste libro ya se encuentra en la biblioteca: ");
+                System.out.println(libro.titulo() + " - " + libro.autor() + " - " +
+                        libro.anio() + " - " + libro.ISBN());
+                encontrado = true;
+            }
+        }
+        if (!encontrado) {
+            throw new BookNotFoundException("No se ha encontrado el libro con " + texto);
+        }
     }
 
     @Override
