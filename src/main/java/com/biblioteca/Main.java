@@ -6,10 +6,10 @@ public class Main {
         //manager.listarTodosLibros();
         //manager.listarDisponibles();
         //manager.listarNoDisponibles();
-        //manager.buscarLibro("prin");
-        //manager.sacarLibro("prin");
+        //manager.buscarLibro("el");
+        manager.sacarLibro("el");
         //manager.listarNoDisponibles();
-        manager.devolverLibro("bruja");
+        //manager.devolverLibro("");
 
     }
 }

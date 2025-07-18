@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 public class LibraryManager implements LibraryService {
     // Array de libros
-    //private Book[] catalogo;
     private List<Book> catalogo;
 
     // Constructor catálogo
@@ -20,19 +19,42 @@ public class LibraryManager implements LibraryService {
         ));
     }
 
+    // Metodo de impresion de libros
+    private void imprimirLibro(Book libro) {
+        System.out.println(libro.titulo() + " - " + libro.autor() + " - " +
+                libro.anio() + " - " + libro.ISBN());
+    }
+
+    // Metodo de coincidencia de libros
+    private boolean coincide(Book libro, String texto) {
+        return libro.titulo().toLowerCase().contains(texto) ||
+                libro.autor().toLowerCase().contains(texto) ||
+                libro.ISBN().toLowerCase().contains(texto);
+    }
+
+    // Metodo para actualizar disponibilidad
+    private void actualizarDisponibilidad(int i, Book libro, boolean disponible) {
+        Book nuevoLibro = new Book(
+                libro.titulo(),
+                libro.autor(),
+                libro.anio(),
+                libro.ISBN(),
+                disponible
+        );
+        catalogo.set(i, nuevoLibro);
+    }
+
+
     @Override
     public void buscarLibro(String texto) throws Exception, BookNotFoundException {
         texto = texto.toLowerCase();
         boolean encontrado = false;
         for (Book libro : catalogo) {
             if (
-                    libro.titulo().toLowerCase().contains(texto) ||
-                            libro.autor().toLowerCase().contains(texto) ||
-                            libro.ISBN().toLowerCase().contains(texto)
+                    coincide(libro, texto)
             ) {
                 System.out.println("\nLibro encontrado: ");
-                System.out.println(libro.titulo() + " - " + libro.autor() + " - " +
-                        libro.anio() + " - " + libro.ISBN());
+                imprimirLibro(libro);
                 encontrado = true;
             }
         }
@@ -48,32 +70,19 @@ public class LibraryManager implements LibraryService {
         for (int i = 0; i < catalogo.size(); i++) {
             Book libro = catalogo.get(i);
             if (
-                    ( libro.titulo().toLowerCase().contains(texto) ||
-                            libro.autor().toLowerCase().contains(texto) ||
-                            libro.ISBN().toLowerCase().contains(texto) ) && libro.disponibilidad()
+                    coincide(libro, texto) && libro.disponibilidad()
             ) {
                 System.out.println("\nLibro disponible para el préstamo: ");
-                System.out.println(libro.titulo() + " - " + libro.autor() + " - " +
-                        libro.anio() + " - " + libro.ISBN());
-                Book nuevoLibro = new Book(
-                        libro.titulo(),
-                        libro.autor(),
-                        libro.anio(),
-                        libro.ISBN(),
-                        false // ← marcamos como prestado
-                );
-                catalogo.set(i, nuevoLibro);
+                imprimirLibro(libro);
+                actualizarDisponibilidad(i, libro, false); // Prestado
                 System.out.println("\nLibro prestado con éxito.");
                 encontrado = true;
                 break;
             } else if (
-                    ( libro.titulo().toLowerCase().contains(texto) ||
-                            libro.autor().toLowerCase().contains(texto) ||
-                            libro.ISBN().toLowerCase().contains(texto) ) && !libro.disponibilidad()
+                    coincide(libro, texto) && !libro.disponibilidad()
             ) {
                 System.out.println("\nLibro No disponible. Ya en préstamo: ");
-                System.out.println(libro.titulo() + " - " + libro.autor() + " - " +
-                        libro.anio() + " - " + libro.ISBN());
+                imprimirLibro(libro);
                 encontrado = true;
             }
         }
@@ -89,32 +98,19 @@ public class LibraryManager implements LibraryService {
         for (int i = 0; i < catalogo.size(); i++) {
             Book libro = catalogo.get(i);
             if (
-                    ( libro.titulo().toLowerCase().contains(texto) ||
-                            libro.autor().toLowerCase().contains(texto) ||
-                            libro.ISBN().toLowerCase().contains(texto) ) && !libro.disponibilidad()
+                    coincide(libro, texto) && !libro.disponibilidad()
             ) {
                 System.out.println("\nLibro que quieres devolver: ");
-                System.out.println(libro.titulo() + " - " + libro.autor() + " - " +
-                        libro.anio() + " - " + libro.ISBN());
-                Book nuevoLibro = new Book(
-                        libro.titulo(),
-                        libro.autor(),
-                        libro.anio(),
-                        libro.ISBN(),
-                        true // ← marcamos como prestado
-                );
-                catalogo.set(i, nuevoLibro);
+                imprimirLibro(libro);
+                actualizarDisponibilidad(i, libro, true); // Disponible
                 System.out.println("\nLibro devuelto con éxito.");
                 encontrado = true;
                 break;
             } else if (
-                    ( libro.titulo().toLowerCase().contains(texto) ||
-                            libro.autor().toLowerCase().contains(texto) ||
-                            libro.ISBN().toLowerCase().contains(texto) ) && libro.disponibilidad()
+                    coincide(libro, texto) && libro.disponibilidad()
             ) {
                 System.out.println("\nEste libro ya se encuentra en la biblioteca: ");
-                System.out.println(libro.titulo() + " - " + libro.autor() + " - " +
-                        libro.anio() + " - " + libro.ISBN());
+                imprimirLibro(libro);
                 encontrado = true;
             }
         }
@@ -127,8 +123,7 @@ public class LibraryManager implements LibraryService {
     public void listarTodosLibros() {
         System.out.println("\nEl catálogo de libros de nuestra Biblioteca es el siguiente: ");
         for (Book libro : catalogo) {
-            System.out.println(libro.titulo() + " - " + libro.autor() + " - " +
-                    libro.anio() + " - " + libro.ISBN());
+            imprimirLibro(libro);
         }
 
     }
@@ -138,8 +133,7 @@ public class LibraryManager implements LibraryService {
         System.out.println("\nLos libros que tenemos disponibles actualmente son los siguientes: ");
         for (Book libro : catalogo) {
             if (libro.disponibilidad()) {
-                System.out.println(libro.titulo() + " - " + libro.autor() + " - " +
-                        libro.anio() + " - " + libro.ISBN());
+                imprimirLibro(libro);
             }
         }
     }
@@ -149,11 +143,9 @@ public class LibraryManager implements LibraryService {
         System.out.println("\nLos libros que NO tenemos disponibles actualmente son los siguientes: ");
         for (Book libro : catalogo) {
             if (!libro.disponibilidad()) {
-                System.out.println(libro.titulo() + " - " + libro.autor() + " - " +
-                        libro.anio() + " - " + libro.ISBN());
+                imprimirLibro(libro);
             }
         }
-
     }
 }
 
