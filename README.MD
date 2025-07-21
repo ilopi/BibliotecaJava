@@ -1,107 +1,102 @@
-# 📚 Gestor de Biblioteca en Java
+# Gestor de Biblioteca en Java
 
-Este es un proyecto simple de consola hecho en Java para gestionar una pequeña biblioteca de libros. Permite consultar, prestar y devolver libros a través de un menú interactivo, y está pensado para estudiantes que están empezando con Java y quieren practicar:
+Este proyecto es una aplicación de consola desarrollada en Java que simula el funcionamiento básico de una biblioteca. Permite realizar operaciones comunes como listar libros, buscarlos por diferentes criterios, y registrar préstamos y devoluciones, todo a través de un menú interactivo en la terminal.
 
-- Clases y records
-- Interfaces
-- Listas (`ArrayList`)
-- Condicionales y bucles
-- `Scanner` y entrada de usuario
-- Manejo de excepciones
-- Uso de `Streams` (parcial)
-- Programación estructurada
+Está dirigido a personas que están aprendiendo Java y desean aplicar conceptos fundamentales del lenguaje en un proyecto funcional y estructurado.
 
 ---
 
-## 🚀 Funcionalidades
+## Funcionalidades principales
 
-✅ Listar todos los libros  
-✅ Listar solo libros disponibles  
-✅ Listar solo libros prestados  
-✅ Buscar libros por título, autor o ISBN  
-✅ Prestar libros disponibles  
-✅ Devolver libros prestados  
-✅ Menú interactivo por consola  
-✅ Manejo de errores con mensajes claros
-
----
-
-## 🧠 Tecnologías usadas
-
-- **Java 17+**
-- IntelliJ IDEA (recomendado)
-- Maven (estructura de proyecto estándar)
+- Listado completo del catálogo
+- Filtro por libros disponibles o prestados
+- Búsqueda por título, autor o ISBN
+- Préstamo de libros disponibles
+- Devolución de libros prestados
+- Menú de navegación interactivo
+- Validación de entradas y manejo de errores
 
 ---
 
-## 📁 Estructura del proyecto
+## Tecnologías utilizadas
 
-```
-📦 src/
- └── main/
-     └── java/
-         └── com.biblioteca/
-             ├── Main.java
-             ├── Book.java              // record
-             ├── LibraryManager.java    // lógica principal
-             ├── LibraryService.java    // interfaz
-             ├── BookNotFoundException.java
-             └── LibraryUtils.java      // métodos utilitarios (opcional)
-```
+- Java 17 o superior
+- IntelliJ IDEA como entorno de desarrollo recomendado
+- Estructura de proyecto con Maven
 
 ---
 
-## 🖥️ Captura de uso
+## Estructura del proyecto
 
-```
+src/
+└── main/
+└── java/
+└── com.biblioteca/
+├── Main.java
+├── Book.java
+├── LibraryManager.java
+├── LibraryService.java
+├── BookNotFoundException.java
+└── LibraryUtils.java
+
+---
+
+## Ejemplo de uso
+
 --- MENÚ BIBLIOTECA ---
-1. Listar todos los libros
-2. Listar libros disponibles
-3. Listar libros prestados
-4. Buscar libro
-5. Sacar libro
-6. Devolver libro
-7. Salir
+
+Listar todos los libros
+
+Listar libros disponibles
+
+Listar libros prestados
+
+Buscar libro
+
+Sacar libro
+
+Devolver libro
+
+Salir
 Elige una opción: 5
 Introduce texto para sacar libro: el
 
 Se encontraron varios libros:
-1. El Principito - Antoine de Saint-Exupéry - 1943
-2. El Hobbit - J. R. R. Tolkien - 1937
+
+El Principito - Antoine de Saint-Exupéry - 1943
+
+El Hobbit - J. R. R. Tolkien - 1937
 ¿Cuál desea sacar? Introduce el número: 2
 
-✅ Libro prestado con éxito.
-```
+---
+
+## Consideraciones
+
+- Los datos se mantienen en memoria y no se persisten al cerrar la aplicación.
+- La clase `Book` está implementada como un `record` y, por tanto, es inmutable. Para modificar su disponibilidad, se crea una nueva instancia.
+- La colección de libros es fija y cargada en el inicio del programa.
 
 ---
 
-## ⚠️ Notas
+## Cómo ejecutar
 
-- Los libros están pre-cargados en el programa al iniciar
-- Los `Book` son `record`, por lo que son inmutables. Para modificar disponibilidad se crea uno nuevo
-- No se usan bases de datos ni archivos: todos los datos están en memoria
-
----
-
-## 🛠️ Cómo usarlo
-
-1. Clona el repositorio
-2. Abre el proyecto en IntelliJ IDEA
-3. Asegúrate de tener Java 17+ configurado
-4. Ejecuta `Main.java`
-5. Usa el menú por consola para interactuar
+1. Clonar este repositorio
+2. Abrir el proyecto con IntelliJ IDEA
+3. Asegurarse de tener Java 17 o superior configurado
+4. Ejecutar `Main.java` desde el IDE
+5. Interactuar con la aplicación mediante el menú de consola
 
 ---
 
-## 💡 Mejoras futuras (si te animas)
+## Posibles mejoras futuras
 
-- Guardar y leer libros desde archivo o base de datos
-- Añadir interfaz gráfica con JavaFX o Swing
-- Ordenar libros al listar
-- Permitir añadir nuevos libros desde el menú
+- Lectura y escritura de datos desde un archivo o base de datos
+- Incorporación de interfaz gráfica (JavaFX o Swing)
+- Funcionalidad para añadir libros manualmente
+- Ordenamiento por diferentes criterios
 
 ---
 
-## 🧑‍💻 Autora
+## Autora
 
-✨ Proyecto hecho por Isabel Sánchez López como práctica personal de Java
+Desarrollado por **Isabel Sánchez López** como práctica personal de programación en Java.
